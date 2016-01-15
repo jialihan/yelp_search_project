@@ -1,0 +1,30 @@
+{% extends 'yelp/base.html' %}
+{% block title_block %} Zipcode Search Results {% endblock %}
+{% block body_block %}
+    <h1> {% if cat == 'all_cat' %} Places {% else %} {{ cat }} {% endif %}
+        found at {{ zipcode }} ({{ arr.0.2 }})</h1>
+
+    <table class="table table-striped">
+    {% if not arr %}
+        <h3>Sorry, this zipcode matches no record in database.</h3>
+    {% else %}
+        <tr><th>Name</th><th>Picture</th><th>Rating</th><th>Words from Bing</th></tr>
+        {% for row in arr %}
+        <tr>
+            <td>{{row.0}}</td>
+            <td><img src="{{ row.4 }}"></td>
+            <td>{{row.1}}</td>
+            <td>{{row.5}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <a href="{% url 'search_zipcode' %}">Try another search</a>
+
+    {% if zipcode_arr %}
+        <h3 class="text-center">Also try these nearby zipcodes:</h3>
+            {% for row in zipcode_arr %}
+              <h4><a href={% url 'search_zipcode_result' row.0 cat %} > {{ row.0 }} ({{ row.1 }}, {{ row.2 }}) </a></h4>
+            {% endfor %}
+    {% endif %}
+{% endblock %}
